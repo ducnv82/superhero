@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) Duc Nguyen Van. - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<Configuration>
+
+    <Appenders>
+        <Console name="console" target="system_out">
+            <PatternLayout pattern="%d - %-5p [%t] - %c - %m - MDC: {%X{service}, %X{correlationId}, %X{user}, %X{action}, %X{resource}}%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+
+        <Root level="info">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

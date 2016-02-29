@@ -1,0 +1,22 @@
+####
+# Java.gitignore
+####
+*.class
+*.jar
+
+
+####
+# Maven.gitignore
+####
+target/
+
+####
+# IDE.gitignore
+####
+
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.metadata
