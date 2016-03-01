@@ -6,7 +6,14 @@
 
 package com.mycompany.superhero.service;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import com.mycompany.superhero.SuperheroApplication;
 import com.mycompany.superhero.controller.SuperheroController;
@@ -23,6 +30,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.time.LocalDate.of;
+import static javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier;
+import static javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory;
+import static javax.net.ssl.SSLContext.getInstance;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,7 +54,46 @@ public class SuperheroIControllerIT extends AbstractTestNGSpringContextTests {
     @Value("${security.user.password}")
     private String password;
 
+    @Value("${server.port}")
+    private int serverPort;
+
     private RestTemplate restTemplate;
+
+    private static final TrustManager [] UNQUESTIONING_TRUST_MANAGER = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public X509Certificate [] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(final X509Certificate[] certs, final String authType) {
+            //EMPTY
+        }
+
+        @Override
+        public void checkServerTrusted(final X509Certificate[] certs, final String authType) {
+            //EMPTY
+        }
+    }};
+
+    static {
+        // for localhost testing only
+        setDefaultHostnameVerifier((hostname, sslSession) -> {
+            if ("localhost".equals(hostname)) {
+                return true;
+            }
+            return false;
+        });
+
+        // Install the all-trusting trust manager
+        try {
+            final SSLContext sc = getInstance("SSL");
+            sc.init( null, UNQUESTIONING_TRUST_MANAGER, null);
+            setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @BeforeMethod
     public void setUp() {
@@ -53,7 +102,7 @@ public class SuperheroIControllerIT extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testFindAll() {
-        final List<Superhero> superheroes = restTemplate.getForObject("http://localhost:8888/superheroes",
+        final List<Superhero> superheroes = restTemplate.getForObject("https://localhost:" + serverPort + "/superheroes",
                                                                             SuperheroesResponse.class).getSuperheroes();
         assertThat(superheroes.size(), equalTo(2));
 
@@ -66,14 +115,14 @@ public class SuperheroIControllerIT extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testFindByPseudonym() {
-        final Superhero batman = restTemplate
-                .getForObject("http://localhost:8888/superheroes/superhero/pseudonym/Batman", SuperheroResponse.class)
-                .getSuperhero();
-
+        final Superhero batman =
+                restTemplate.getForObject("https://localhost:" + serverPort + "/superheroes/superhero/pseudonym/Batman",
+                                                                                SuperheroResponse.class).getSuperhero();
         assertBatman(batman);
 
         final Superhero superman = restTemplate
-                .getForObject("http://localhost:8888/superheroes/superhero/pseudonym/Superman", SuperheroResponse.class)
+                .getForObject("https://localhost:" + serverPort + "/superheroes/superhero/pseudonym/Superman",
+                                                                                SuperheroResponse.class)
                 .getSuperhero();
 
         assertSuperman(superman);
@@ -82,8 +131,9 @@ public class SuperheroIControllerIT extends AbstractTestNGSpringContextTests {
     @Test
     public void testFindByPseudonym_notFound() {
         final Superhero nonexistentHero = restTemplate
-            .getForObject("http://localhost:8888/superheroes/superhero/pseudonym/nonExistence", SuperheroResponse.class)
-            .getSuperhero();
+                .getForObject("https://localhost:" + serverPort + "/superheroes/superhero/pseudonym/nonExistence",
+                                                                                SuperheroResponse.class)
+                .getSuperhero();
 
         assertThat(nonexistentHero, nullValue());
     }

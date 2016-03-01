@@ -35,9 +35,6 @@ public class SuperheroController {
     /**
      * Find all super heroes. <br/>
      *
-     * It is applied the http basic authentication, to make request to server uses
-     * curl user:cGFzc3dvcmQ=@localhost:8080/superheroes
-     *
      * @return {@link SuperheroesResponse} object
      */
     @RequestMapping(method = GET)
@@ -47,10 +44,6 @@ public class SuperheroController {
 
     /**
      * Find by pseudonym. <br/>
-     *
-     * It is applied the http basic authentication, to make request to server uses
-     * curl user:cGFzc3dvcmQ=@localhost:8080/superheroes/superhero/pseudonym/Batman <br/>
-     * curl user:cGFzc3dvcmQ=@localhost:8080/superheroes/superhero/pseudonym/Superman <br/>
      *
      * @param pseudonym pseudonym like "Batman", "Superman"
      * @return {@link SuperheroResponse} object

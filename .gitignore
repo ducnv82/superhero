@@ -9,6 +9,7 @@
 # Maven.gitignore
 ####
 target/
+test-output/
 
 ####
 # IDE.gitignore
