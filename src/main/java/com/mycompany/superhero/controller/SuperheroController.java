@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
- * Super hero controller. <br/>
- * It is applied the http basic authentication, to make request to server uses <br/>
- *  curl user:cGFzc3dvcmQ=@localhost:8080/superheroes
+ * Super hero controller.
  *
  * @author duc
  *
