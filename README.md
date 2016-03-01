@@ -1,4 +1,4 @@
-**Note about port** : The application will be running at the port **8443** (both run and integration-tests), so please make sure that the port **8443** in your machine is available
+**Note about port** : The application will be running at the port **8443** and the integration tests run at the port **9443**, so please make sure that the such ports in your machine are available
 
 1.  To run the app: in the root of project, run the command "mvn spring-boot:run"
 2.  In the bash shell, run "curl -ku user:cGFzc3dvcmQ= https://localhost:8443/superheroes" to get list of all heroes in JSON format.
