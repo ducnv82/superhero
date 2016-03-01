@@ -1,6 +1,6 @@
 **Note about port** : The application will be running at the port **8443** and the integration tests run at the port **9443**, so please make sure that the such ports in your machine are available
 
-1.  To run the app: in the root of project, run the command "mvn spring-boot:run"
+1.  To run the app: in the root of project, run the command "mvn spring-boot:run -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
 2.  In the bash shell, run "curl -ku user:cGFzc3dvcmQ= https://localhost:8443/superheroes" to get list of all heroes in JSON format.
 3.  In the bash shell, run "curl -ku user:cGFzc3dvcmQ= https://localhost:8443/superheroes/superhero/pseudonym/Batman" to get details of the specific hero "Batman" in JSON format.
 3.  In the bash shell, run "curl -ku user:cGFzc3dvcmQ= https://localhost:8443/superheroes/superhero/pseudonym/Superman" to get details of the specific hero "Superman" in JSON format.
